@@ -1,8 +1,13 @@
-devlist = bluetoothlist
+clear all
+clc 
 
-%identifier le module bluetooth que l'on va utiliser
-device = bluetooth("ads_eval_kit");
+% REPRESENTATION GRAPHIQUE
 
+%% Utilisation du module BLE
 
-read(b)
-angle1=write("b")
+%Connection avec le module bluetooth
+device = ble("ads_eval_kit");
+%a=characteristic(device,"ads_eval_kit","angles")
+%Lire les informations du module BLE
+angles = read(device,'latest');
+
