@@ -63,6 +63,7 @@ def reader():
     global ang1, ang2
     # There's header data, so toss the first line
     ser.readline()
+    'ser. fait reference à serial ?'
     while True:
         ang1, ang2 = [float(x) for x in ser.readline().strip().decode().split(',')]
         #print(ang1, ang2)
