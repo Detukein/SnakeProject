@@ -69,17 +69,25 @@ Z = R.*sind(angle1);
 
 %% Sorties 
 
- for i = 1:nFrame
-     
-     plot3([0,X1(i), X(i)],[0,Y1(i), Y(i)],[0,Z1(i), Z(i)],'-o');
-     xlim([min(X),max(X)]);
-     ylim([min(Y),max(Y)]);
-     zlim([0,max(Z)]);
-     drawnow
-     pause(2/100)
-     
- end
- 
+%  for i = 1:nFrame
+%      
+%      plot3([0,X1(i), X(i)],[0,Y1(i), Y(i)],[0,Z1(i), Z(i)],'-o');
+%      xlim([min(X),max(X)]);
+%      ylim([min(Y),max(Y)]);
+%      zlim([0,max(Z)]);
+%      drawnow
+%      pause(2/100)
+%      
+%  end
+
 %Utiliser la fonction trace pour avoir une mise en cache de la figure
 % plot3(0,0,0,'o', X,Y,Z,'-o') où '-o' permet de faire un trait entre O et K
 %On peut rajouter des points en plus pour avoir le rayon de courbure approximatif
+
+%% Verifications
+
+%Longueur du capteur par Norme 
+
+for i = 1:nFrame
+    VerifLCapteur(i,1) = sqrt(X(i,:)^2+Y(i,:)^2+Z(i,:)^2);
+end 
