@@ -23,10 +23,8 @@ clc
 % 
 %C=Angles
 
-Data=importdata('.\Data\Horizontal1.csv');
-
-
-
+% Data=importdata('.\Data\Lateral.csv');
+Data=[45,0;0,0;0,0;0,0;0,0;0,0;0,0];
 %% Ce qu'on reçoit du capteur 
 
 angle1=Data(:,1);%Theta
@@ -34,46 +32,42 @@ angle2=Data(:,2);%Phi
 %% Données propres au capteur
 n=1;
 LCapteur = 100; %en mm
+LC2=LCapteur/2;
 O = [0,0,0];
 
 
 %% BOITE NOIRE 
 nFrame = size (Data,1);
-
-R=(LCapteur./(2*n*sind(angle1/(2*n))));
-
-
-
-
-X = R.*(1-cosd(angle1)).*cosd(angle2);
-Y = R.*(1-cosd(angle1)).*sind(angle2);
-Z = R.*sind(angle1);
-
-
- for i = 1:nFrame
-     
-     plot3([0, X(i)],[0, Y(i)],[0, Z(i)],'-o');
-     xlim([min(X),max(X)]);
-     ylim([min(Y),max(Y)]);
-     zlim([0,max(Z)]);
-     drawnow
-     pause(1/100)
- end
-
-
-% rV = abs ((180*LCapteur)/pi*AngleVer)
-% rH = abs ((180*LCapteur)/pi*AngleHor)
-% 
-% function K = PointFinal (rV,rH)
-% K = [rV,rH,JSP]
-% 
-% %K dépend du rayon de courbure du capteur en vertical et en horizontal(X et Y). 
-% %Il ne nous reste plus qu'à calculer la fin du capteur (en Z) 
-% end
-
+aT=pi/2-angle1;
+X = sind(aT).*(LC2);
+Y = LC2.*(1+cosd(aT));
+Z = X.*sind(angle2);
 
 %% Sorties 
+
+%  for i = 1:nFrame
+%      
+%      plot3([0, X(i)],[0, Y(i)],[0, Z(i)],'-o');
+%      xlim([-100,max(X)]);
+%      ylim([-100,max(Y)]);
+%      zlim([-100,max(Z)]);
+%      drawnow
+%      pause(1/100)
+%  end
 
 %Utiliser la fonction trace pour avoir une mise en cache de la figure
 % plot3(0,0,0,'o', X,Y,Z,'-o') où '-o' permet de faire un trait entre O et K
 %On peut rajouter des points en plus pour avoir le rayon de courbure approximatif
+
+%% Test
+% Longueur de la corde
+for i = 1:nFrame
+    VerifLCapteur(i,1) = (sqrt(X(i,:)^2+Y(i,:)^2+Z(i,:)^2));
+end 
+
+figure 
+plot(VerifLCapteur)
+grid on;
+xlabel('temps(s)');
+ylabel('Longueur de la corde du capteur');
+title('Evolution de la longueur de la corde du capteur au cours du temps');
