@@ -38,6 +38,8 @@ O = [0,0,0];
 
 %% BOITE NOIRE 
 nFrame = size (Data,1);
+alpha = 180-(90+(180-angle1)/2);
+gamma = 90-alpha;
 
 %Initialisation des matrices 
 Xm=zeros([nFrame, 1]);
@@ -45,42 +47,52 @@ Ym=zeros([nFrame, 1]);
 Zm=zeros([nFrame, 1]);
 CordeCapteur=zeros([nFrame, 1]);
 
-%Point Final 
+%Point Final (5) 
 X = sind(angle1).*(LC2);
 Y = LC2.*(1+cosd(angle1));
 Z = X.*sind(angle2);
 
-%Point milieu de la corde
-XPm = LC2/2.*sind(angle1);
-YPm = (LC2/2)+cosd(angle1)*LC2/2;
-ZPm = XPm.*sind(angle2);
+% %Point milieu de la corde
+% XPm = LC2/2.*sind(angle1);
+% YPm = (LC2/2)+cosd(angle1)*LC2/2;
+% ZPm = XPm.*sind(angle2);
 
-%Point milieu courbe 
-alpha = 180-(90+(180-angle1)/2);
-gamma = 90-alpha;
-fleche1 = angle1/6;
-% for i = 1:nFrame
-%     CordeCapteur(i,1) = sqrt(X(i,:)^2+Y(i,:)^2+Z(i,:)^2);
-%     Xm(i,1) = (CordeCapteur(i,1)./2).*cosd(gamma(i,1))-fleche.*sind(gamma(i,1));
-%     Ym(i,1) = (CordeCapteur(i,1)./2).*sind(gamma(i,1))-fleche.*cosd(gamma(i,1));
-%     Zm(i,1) = XPm.*sind(angle2(i,1));
-% end 
+%Point milieu courbe (3)
+flechem1 = angle1/6;
+flechem2=angle2./6;
 
 CordeCapteur = sqrt(X.^2+Y.^2+Z.^2);
 a=CordeCapteur./2;
-fleche2=angle2./6;
-Xm = (CordeCapteur./2).*cosd(gamma)-fleche1.*sind(gamma);
-Ym = (CordeCapteur./2).*sind(gamma)-fleche1.*cosd(gamma);
-Zm = -a.*sind(angle2)+fleche2.*cosd(angle2);
+
+Xm = (CordeCapteur./2).*cosd(gamma)-flechem1.*sind(gamma);
+Ym = (CordeCapteur./2).*sind(gamma)-flechem1.*cosd(gamma);
+Zm = -a.*sind(angle2)+flechem2.*cosd(angle2);
+
+%Point de la courbe (2)
+fleche21 = angle1./8-(0.25*CordeCapteur).^2./CordeCapteur.^3.*2/3.*angle1;
+fleche22 = angle2./8-(0.25*CordeCapteur).^2./CordeCapteur.^3.*2/3.*angle2;
+
+X2 = (CordeCapteur./4).*cosd(gamma)-fleche21.*sind(gamma);
+Y2 = (CordeCapteur./4).*sind(gamma)-fleche21.*cosd(gamma);
+Z2 = -a./2.*sind(angle2)+fleche22.*cosd(angle2);
+
+
+%Point de la courbe (4)
+fleche41 = 3.*angle1./8-(2.*angle1)./(3.*CordeCapteur.^3).*(3/4.*CordeCapteur).^3;
+fleche42 = 3.*angle2./8-(2.*angle2)./(3.*CordeCapteur.^3).*(3/4.*CordeCapteur).^3;
+
+X4 = (CordeCapteur./4).*cosd(gamma)-fleche41.*sind(gamma);
+Y4 = (CordeCapteur./4).*sind(gamma)-fleche41.*cosd(gamma);
+Z4 = -a./2.*sind(angle2)+fleche42.*cosd(angle2);
 %% Sorties 
 
  for i = 1:nFrame
      
+     %plot3([0, X2(i), Xm(i), X4(i), X(i)],[0, Y2(i), Ym(i), Y4(i), Y(i)],[0, Z2(i), Zm(i), Z4(i), Z(i)],'-o');
      plot3([0, Xm(i), X(i)],[0, Ym(i), Y(i)],[0, Zm(i), Z(i)],'-o');
-%     plot3([0, X(i)],[0, Y(i)],[0, Z(i)],'-o');
-     xlim([-100,max(X)]);
-     ylim([-100,max(Y)]);
-     zlim([-100,max(Z)]);
+     xlim([-100,100]);
+     ylim([-100,100]);
+     zlim([-100,100]);
      drawnow
      pause(1/100)
  end
@@ -91,11 +103,11 @@ Zm = -a.*sind(angle2)+fleche2.*cosd(angle2);
 
 %% Test
 % Longueur de la corde
-
-% figure 
-% plot(CordeLCapteur)
-% grid on;
-% xlabel('temps(s)');
-% ylabel('Longueur de la corde du capteur');
-% title('Evolution de la longueur de la corde du capteur au cours du temps');
+LCordeCapteur = sqrt((X-X4).^2+(Y-Y4).^2+(Z-Z4).^2)+sqrt((X4-Xm).^2+(Y4-Ym).^2+(Z4-Zm).^2)+sqrt((Xm-X2).^2+(Ym-Y2).^2+(Zm-Z2).^2)+sqrt((X2).^2+(Y2).^2+(Z2).^2);
+figure 
+plot(CordeLCapteur)
+grid on;
+xlabel('temps(s)');
+ylabel('Longueur de la corde du capteur');
+title('Evolution de la longueur de la corde du capteur au cours du temps');
 
