@@ -58,17 +58,20 @@ ZPm = XPm.*sind(angle2);
 %Point milieu courbe 
 alpha = 180-(90+(180-angle1)/2);
 gamma = 90-alpha;
-fleche = angle1/6;
+fleche1 = angle1/6;
+% for i = 1:nFrame
+%     CordeCapteur(i,1) = sqrt(X(i,:)^2+Y(i,:)^2+Z(i,:)^2);
+%     Xm(i,1) = (CordeCapteur(i,1)./2).*cosd(gamma(i,1))-fleche.*sind(gamma(i,1));
+%     Ym(i,1) = (CordeCapteur(i,1)./2).*sind(gamma(i,1))-fleche.*cosd(gamma(i,1));
+%     Zm(i,1) = XPm.*sind(angle2(i,1));
+% end 
 
-for i = 1:nFrame
-    CordeCapteur(i,1) = sqrt(X(i,:)^2+Y(i,:)^2+Z(i,:)^2);
-    Xm(i,1) = (CordeCapteur(i,1)./2).*cosd(gamma(i,1))-fleche.*sind(gamma(i,1));
-    Ym(i,1) = (CordeCapteur(i,1)./2).*sind(gamma(i,1))-fleche.*cosd(gamma(i,1));
-    Zm(i,1) = XPm.*sind(angle2(i,1));
-end 
-
-
-
+CordeCapteur = sqrt(X.^2+Y.^2+Z.^2);
+a=CordeCapteur./2;
+flecheT=
+Xm = (CordeCapteur./2).*cosd(gamma)-fleche1.*sind(gamma);
+Ym = (CordeCapteur./2).*sind(gamma)-fleche1.*cosd(gamma);
+Zm = -a*sind(angle2)+;
 %% Sorties 
 
  for i = 1:nFrame

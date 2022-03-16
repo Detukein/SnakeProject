@@ -23,7 +23,7 @@ clc
 % 
 %C=Angles
 
-Data=importdata('.\Data\Lateral.csv');
+Data=importdata('.\Data\Alea.csv');
 % Data=[30,0];
 %% Ce qu'on reçoit du capteur 
 
@@ -58,8 +58,7 @@ ZPm = XPm.*sind(angle2);
 %Point milieu courbe 
 alpha = 180-(90+(180-angle1)/2);
 gamma = 90-alpha;
-fleche = angle1/6;
-
+fleche1 = angle1/6;
 % for i = 1:nFrame
 %     CordeCapteur(i,1) = sqrt(X(i,:)^2+Y(i,:)^2+Z(i,:)^2);
 %     Xm(i,1) = (CordeCapteur(i,1)./2).*cosd(gamma(i,1))-fleche.*sind(gamma(i,1));
@@ -67,10 +66,12 @@ fleche = angle1/6;
 %     Zm(i,1) = XPm.*sind(angle2(i,1));
 % end 
 
-    CordeCapteur = sqrt(X.^2+Y.^2+Z.^2);
-    Xm = (CordeCapteur./2).*cosd(gamma)-fleche.*sind(gamma);
-    Ym = (CordeCapteur./2).*sind(gamma)-fleche.*cosd(gamma);
-    Zm = XPm.*sind(angle2);
+CordeCapteur = sqrt(X.^2+Y.^2+Z.^2);
+a=CordeCapteur./2;
+fleche2=angle2./6;
+Xm = (CordeCapteur./2).*cosd(gamma)-fleche1.*sind(gamma);
+Ym = (CordeCapteur./2).*sind(gamma)-fleche1.*cosd(gamma);
+Zm = -a.*sind(angle2)+fleche2.*cosd(angle2);
 %% Sorties 
 
  for i = 1:nFrame
