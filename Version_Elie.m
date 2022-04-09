@@ -23,7 +23,7 @@ clc
 %     disp (Angle2)
 % end
 
-Data = importdata('.\Data\Horizontal1.csv');
+Data = importdata('.\Data\TEST2.csv');
 
 %% Ce qu'on reçoit du capteur 
 
@@ -37,13 +37,12 @@ LC2 = LCapteur/2;
 
 %% BOITE NOIRE 
 
-%Calcul du Z et du X avec l'angle 1
+% Calcul du Z et du X avec l'angle 1
 
+X = LC2*sin(angle1);
 Z = LC2*(1+cos(angle1));
-X = sin(angle1)*(LC2);
 
-% Si X est négatif, sela change le signe de Y, d'ou l'utilisation d'une
-% valeur absolue
+% Si X est négatif, sela change le signe de Y, d'ou l'utilisation d'une valeur absolue pour X
 
 Y = abs(X).*tan(angle2);
 
@@ -60,45 +59,50 @@ for i=1:1:length(angle1)
     
 % Angle maximal à chaque instant
 
-    Tm1 = atan2(X(i),Z(i));
-    Tm2 = atan2(Y(i),Z(i));
+    a1 = atan2(X(i),Z(i));
+    a2 = atan2(Y(i),Z(i));
 
 
 % Calcul du rayon
 
-    R1 = LCapteur/Tm1; 
-    R2 = LCapteur/Tm2;
+    R1 = LCapteur/a1; 
+    R2 = LCapteur/a2;
 
 % Division du Théta utile (Tu)
-    
 
-    if Tm1<0
-        Tu1 = [0:-0.0000001:Tm1];
+%     tic
+    u = 0.007; 
+
+    if a1<0
+        au1 = [0:-u:a1];
     else
-        Tu1 = [0:0.0000001:Tm1];
+        au1 = [0:u:a1];
     end
 
 % La taille de Tu1 doit etre identique à celle de Tu2
 
-    Ti=(0.0000001*Tm2)/Tm1;
-    if Tm2<0
-        Tu2 = [0:-Ti:Tm2];
+    Ti=(u*a2)/a1;
+    
+    if a2<0
+        au2 = [0:-Ti:a2];
     else
-        Tu2 = [0:Ti:Tm2];
+        au2 = [0:Ti:a2];
     end
-
+    
 
 % Calcul des points X,Y et Z             (Tu)
 
-    Xp = R1.*(1-cos(Tu1));
-    Zp = R2.*sin(Tu2);   
-    Yp = R2.*(1-cos(Tu2));
+    Xp = R1.*(1-cos(au1));
+    Zp = R2.*sin(au2);   
+    Yp = R2.*(1-cos(au2));
     
+%     toc
+
 % Calul du point final en X,Y et Z       (Tm)
 
-    Xef = R1.*(1-cos(Tm1));
-    Zef = R2.*sin(Tm2);
-    Yef = R2.* (1-cos(Tm2));
+    Xef = R1.*(1-cos(a1));
+    Zef = R2.*sin(a2);
+    Yef = R2.*(1-cos(a2));
 
 %% Sorties 
 
@@ -122,7 +126,8 @@ for i=1:1:length(angle1)
 
 %     Affichage 3D
 
-    plot3(Xp,Yp,Zp,'k.')
+    plot3(Xp,Yp,Zp,'k.');
+%     hold on 
     xlim([-100,100]);
     ylim([-100,100]);
     zlim([-10,100]);
@@ -131,7 +136,7 @@ for i=1:1:length(angle1)
     grid on
     
     xlabel('Vertical du capteur')
-    ylabel('latéral du capteur')
+    ylabel('Latéral du capteur')
     zlabel('Hauteur du capteur')
     title('Représentation des déplacements du capteur')
 
